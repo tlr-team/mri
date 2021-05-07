@@ -26,7 +26,7 @@ class IRM:
         self.reset()
 
     def reset(self):
-        self.nlp = spacy.load("en_core_web_lg")
+        self.nlp = spacy.load("en_core_web_md")
         self.index = Indexer()
         self.freqij = []
         self.idfi = []
@@ -51,18 +51,17 @@ class IRM:
 
         # get keywords
         for np in _doc.noun_chunks:
-            for word in np.split(' '):
-                if word != None and word != '' and word not in stop_words:
-                    words.append(word)
+            for word in np.text.split(' '):
+                if word != None and word != '' and word.lower() not in stop_words:
+                    words.append(word.lower())
 
         return words
 
     def add(self, doc):
-
         self.documents.append(doc)
         self.N += 1
 
-        text = doc.Title + doc.Desc
+        text = doc.Title + ' ' + doc.Desc
 
         words = self.text_words(text)
 
@@ -83,7 +82,7 @@ class IRM:
                 self.index.add(word)
                 self.idfi.append(1)
                 self.freqij.append([0] * self.N)
-                self.freqij[len(self.index.terms) - 1] = 1
+                self.freqij[len(self.index.terms) - 1][self.N - 1] = 1
 
     def run_query(self, query, top=10):
         ranking = []
@@ -129,7 +128,7 @@ class IRM:
         for word in wdict.keys():
             i = self.index[word]
 
-            vector[i] = (0, 4 + 0.6 * wdict[word] / _max) * self.idfi_calc(word)
+            vector[i] = (0.4 + 0.6 * wdict[word] / _max) * self.idfi_calc(word)
 
         return vector
 
