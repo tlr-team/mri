@@ -2,14 +2,15 @@ import spacy
 import math
 from stopWords import stop_words
 
+
 class Document:
     def __init__(self, doc):
         self.id = None
         self.Title = None
         self.Desc = None
 
-class Indexer:
 
+class Indexer:
     def __init__(self):
         self.terms = set()
 
@@ -25,8 +26,8 @@ class Indexer:
                 return i
         return -1
 
-class MIR:
 
+class MIR:
     def __init__(self):
         self.reset()
 
@@ -38,11 +39,16 @@ class MIR:
         self.documents = []
         self.N = 0
 
-    def tfij(self, index, doc, freq = None):
-        return self.freqij[index][doc] / if freq == None max([self.freqij[i][doc] for i in range(len(self.index.terms)) else freq])
+    def tfij(self, index, doc, freq=None):
+        return (
+            self.freqij[index][doc]
+            / max([self.freqij[i][doc] for i in range(len(self.index.terms))])
+            if freq == None
+            else freq
+        )
 
     def idfi(self, term):
-        return math.log(self.N/self.idfi[term])
+        return math.log(self.N / self.idfi[term])
 
     def text_words(self, source):
         words = []
@@ -54,7 +60,7 @@ class MIR:
             for word in np.split(' '):
                 if word != None and word != '' and word not in stop_words:
                     words.append(word)
-        
+
         return words
 
     def add(self, doc):
@@ -63,29 +69,29 @@ class MIR:
         self.N += 1
 
         text = doc.Title + doc.Desc
-        
+
         words = self.text_words(text)
-        
+
         n = len(self.index.terms)
 
         # add new document row
         for i in range(n):
-            self.freqij[i].append(0)        
+            self.freqij[i].append(0)
 
         for word in words:
             if self.index.contains(word):
                 i = self.index[word]
 
                 self.idfi[i] += 1
-                self.freqij[i][N-1] += 1
+                self.freqij[i][N - 1] += 1
 
             else:
                 self.index.append(word)
                 self.idfi.append(1)
                 self.freqij.append([0] * N)
-                self.freqij[len(self.index.terms) -1 ] = 1
-    
-    def run_query(self, query, top = 10):
+                self.freqij[len(self.index.terms) - 1] = 1
+
+    def run_query(self, query, top=10):
         ranking = []
 
         q = self.build_query_vector(query)
@@ -95,11 +101,11 @@ class MIR:
         for i in range(self.N):
             w = self.build_document_vector(i)
 
-            term1 = sum([w[k]*q[k] for k in range(n)])
-            term2 = math.sqrt(sum([w[k]**2 for K in range(n)]))
-            temr3 = math.sqrt(sum([q[k]**2 for k in range(n)]))
+            term1 = sum([w[k] * q[k] for k in range(n)])
+            term2 = math.sqrt(sum([w[k] ** 2 for k in range(n)]))
+            temr3 = math.sqrt(sum([q[k] ** 2 for k in range(n)]))
 
-            ranking.append((i, term1/(term2 * temr3)))
+            ranking.append((i, term1 / (term2 * temr3)))
 
         ranking.sort(lambda x: -1 * x[1])
 
@@ -119,7 +125,7 @@ class MIR:
 
         values = []
 
-        for (_,value) in wdict.items():
+        for (_, value) in wdict.items():
             values.append(value)
 
         _max = max(values)
@@ -129,7 +135,7 @@ class MIR:
         for word in wdict.keys():
             i = self.index[word]
 
-            vector[i] = (0,4 + 0.6 * wdict[word]/_max) * self.idfi(word)
+            vector[i] = (0, 4 + 0.6 * wdict[word] / _max) * self.idfi(word)
 
         return vector
 
