@@ -21,7 +21,7 @@ class Indexer:
         return -1
 
 
-class MIR:
+class IRM:
     def __init__(self):
         self.reset()
 
@@ -41,7 +41,7 @@ class MIR:
             else freq
         )
 
-    def idfi(self, term):
+    def idfi_calc(self, term):
         return math.log(self.N / self.idfi[term])
 
     def text_words(self, source):
@@ -77,12 +77,12 @@ class MIR:
                 i = self.index[word]
 
                 self.idfi[i] += 1
-                self.freqij[i][N - 1] += 1
+                self.freqij[i][self.N - 1] += 1
 
             else:
-                self.index.append(word)
+                self.index.add(word)
                 self.idfi.append(1)
-                self.freqij.append([0] * N)
+                self.freqij.append([0] * self.N)
                 self.freqij[len(self.index.terms) - 1] = 1
 
     def run_query(self, query, top=10):
@@ -129,7 +129,7 @@ class MIR:
         for word in wdict.keys():
             i = self.index[word]
 
-            vector[i] = (0, 4 + 0.6 * wdict[word] / _max) * self.idfi(word)
+            vector[i] = (0, 4 + 0.6 * wdict[word] / _max) * self.idfi_calc(word)
 
         return vector
 
@@ -137,7 +137,7 @@ class MIR:
         n = len(self.index.terms)
         max_freq = max([self.freqij[i][doc_indx] for i in range(n)])
 
-        vector = [self.idfi(i) * self.tfij(i, doc_indx, max_freq) for i in range(n)]
+        vector = [self.idfi_calc(i) * self.tfij(i, doc_indx, max_freq) for i in range(n)]
 
         return vector
 
