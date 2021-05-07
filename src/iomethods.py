@@ -2,23 +2,22 @@ from document import Document
 from query import TestQuery
 import json
 
-def load_documents(self, path = '../datasets/', cisi = True):
+def load_documents(path = '../datasets/', cisi = True):
 
-    doc_path = path + if cisi "CISI" else "CRAN" + 'ALL.json'
+    doc_path = path + ("CISI" if cisi else "CRAN") + '.ALL.json'
 
     with open(doc_path, 'r') as docs:
         docs = json.load(docs)
 
     return [Document(docs[i]) for i in docs.keys()]
 
-def load_queries(self, path = '../datasets/', cisi = True):
+def load_queries(path = '../datasets/', cisi = True):
 
-    qsp = path + if cisi "CISI" else "CRAN" + 'QRY.json'
+    qsp = path + ("CISI" if cisi else "CRAN") + '.QRY.json'
 
-    rlp = path + if cisi "CISI" else "CRAN" + 'REL.json'
+    rlp = path + ("CISI" if cisi else "CRAN") + '.REL.json'
 
     qs = []
-    rl = []
 
     with open(qsp, 'r') as qsps:
         _qs = json.load(qsps)
