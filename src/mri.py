@@ -1,13 +1,7 @@
 import spacy
 import math
 from stopWords import stop_words
-
-
-class Document:
-    def __init__(self, doc):
-        self.id = None
-        self.Title = None
-        self.Desc = None
+from document import Document
 
 
 class Indexer:
