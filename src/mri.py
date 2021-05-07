@@ -100,9 +100,9 @@ class IRM:
 
             ranking.append((i, term1 / (term2 * temr3)))
 
-        ranking.sort(lambda x: -1 * x[1])
+        ranking.sort(key=lambda x: -1 * x[1])
 
-        return ranking
+        return ranking[0:top]
 
     def build_query_vector(self, query):
         words = self.text_words(query)
