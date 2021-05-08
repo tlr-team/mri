@@ -120,7 +120,7 @@ class IRM:
 
         values = []
 
-        for (_, value) in wdict.items():
+        for value in wdict.values():
             values.append(value)
 
         _max = max(values)
@@ -130,7 +130,7 @@ class IRM:
         for word in wdict.keys():
             i = self.index[word]
 
-            vector[i] = (0.4 + 0.6 * wdict[word] / _max) * self.idfi_calc(word)
+            vector[i] = (0.4 + 0.6 * wdict[word] / _max) * self.idfi_calc(i)
 
         return vector
 
