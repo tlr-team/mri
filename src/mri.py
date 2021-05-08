@@ -8,7 +8,7 @@ class Indexer:
     def __init__(self):
         self.terms = set()
 
-    def contains(self, elem):
+    def __contains__(self, elem):
         return elem in self.terms
 
     def add(self, term):
@@ -72,7 +72,7 @@ class IRM:
             self.freqij[i].append(0)
 
         for word in words:
-            if self.index.contains(word):
+            if word in self.index:
                 i = self.index[word]
 
                 self.idfi[i] += 1
@@ -112,7 +112,7 @@ class IRM:
         wdict = {}
 
         for word in words:
-            if word in self.index.terms:
+            if word in self.index:
                 if word in wdict:
                     wdict[word] += 1
                 else:
@@ -127,7 +127,7 @@ class IRM:
 
         vector = [0] * len(self.index.terms)
 
-        for word in wdict.keys():
+        for word in wdict:
             i = self.index[word]
 
             vector[i] = (0.4 + 0.6 * wdict[word] / _max) * self.idfi_calc(i)
