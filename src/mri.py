@@ -84,7 +84,7 @@ class IRM:
                 self.freqij.append([0] * self.N)
                 self.freqij[len(self.index.terms) - 1][self.N - 1] = 1
 
-    def run_query(self, query, top=10):
+    def run_query(self, query, top=100):
         ranking = []
 
         q = self.build_query_vector(query)
@@ -104,7 +104,7 @@ class IRM:
 
         ranking.sort(key=lambda x: -1 * x[1])
 
-        return ranking[0:100]
+        return ranking[0:top]
 
     def build_query_vector(self, query):
         words = self.text_words(query)
