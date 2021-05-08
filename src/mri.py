@@ -1,7 +1,7 @@
 import spacy
 import math
-from stopWords import stop_words
-from document import Document
+from .stopwords import stop_words
+from .document import Document
 
 
 class Indexer:

@@ -1,5 +1,5 @@
-from document import Document
-from query import TestQuery
+from .document import Document
+from .query import TestQuery
 import json
 
 
