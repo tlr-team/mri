@@ -98,11 +98,13 @@ class IRM:
             term2 = math.sqrt(sum([w[k] ** 2 for k in range(n)]))
             temr3 = math.sqrt(sum([q[k] ** 2 for k in range(n)]))
 
-            ranking.append((i, term1 / (term2 * temr3)))
+            div = term2 * temr3
+
+            ranking.append((i, term1 / (div) if div != 0 else 0) )
 
         ranking.sort(key=lambda x: -1 * x[1])
 
-        return ranking[0:top]
+        return ranking[0:100]
 
     def build_query_vector(self, query):
         words = self.text_words(query)

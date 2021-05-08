@@ -9,7 +9,7 @@ def load_documents(path = '../datasets/', cisi = True):
     with open(doc_path, 'r') as docs:
         docs = json.load(docs)
 
-    return [Document(docs[i]) for i in docs.keys()]
+    return [Document(docs[i],cisi=cisi) for i in docs.keys()]
 
 def load_queries(path = '../datasets/', cisi = True):
 
@@ -29,6 +29,9 @@ def load_queries(path = '../datasets/', cisi = True):
 
         for key in rl.keys():
             val = int(key)
+
+            if val >= len(qs):
+                continue
 
             qs[val].relevant_documents = []
 
