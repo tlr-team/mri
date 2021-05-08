@@ -100,7 +100,7 @@ class IRM:
 
             div = term2 * temr3
 
-            ranking.append((i, term1 / (div) if div != 0 else 0) )
+            ranking.append((i, term1 / (div) if div != 0 else 0))
 
         ranking.sort(key=lambda x: -1 * x[1])
 
@@ -116,7 +116,7 @@ class IRM:
                 if word in wdict:
                     wdict[word] += 1
                 else:
-                    wdict[0] = 1
+                    wdict[word] = 1
 
         values = []
 
@@ -138,7 +138,9 @@ class IRM:
         n = len(self.index.terms)
         max_freq = max([self.freqij[i][doc_indx] for i in range(n)])
 
-        vector = [self.idfi_calc(i) * self.tfij(i, doc_indx, max_freq) for i in range(n)]
+        vector = [
+            self.idfi_calc(i) * self.tfij(i, doc_indx, max_freq) for i in range(n)
+        ]
 
         return vector
 
