@@ -2,32 +2,34 @@ from document import Document
 from query import TestQuery
 import json
 
-def load_documents(path = '../datasets/', cisi = True):
 
-    doc_path = path + ("CISI" if cisi else "CRAN") + '.ALL.json'
+def load_documents(path='../datasets/', dataset='CISI'):
+
+    doc_path = path + dataset + '.ALL.json'
 
     with open(doc_path, 'r') as docs:
         docs = json.load(docs)
 
-    return [Document(docs[i],cisi=cisi) for i in docs.keys()]
+    return [Document(docs[i], cisi=(dataset == 'CISI')) for i in docs]
 
-def load_queries(path = '../datasets/', cisi = True):
 
-    qsp = path + ("CISI" if cisi else "CRAN") + '.QRY.json'
+def load_queries(path='../datasets/', dataset='CISI'):
 
-    rlp = path + ("CISI" if cisi else "CRAN") + '.REL.json'
+    qsp = path + dataset + '.QRY.json'
+
+    rlp = path + dataset + '.REL.json'
 
     qs = []
 
     with open(qsp, 'r') as qsps:
         _qs = json.load(qsps)
 
-        qs = [TestQuery(_qs[i]['text'], None) for i in _qs.keys()]
+        qs = [TestQuery(_qs[i]['text'], None) for i in _qs]
 
     with open(rlp, 'r') as rlps:
         rl = json.load(rlps)
 
-        for key in rl.keys():
+        for key in rl:
             val = int(key)
 
             if val >= len(qs):
@@ -35,12 +37,8 @@ def load_queries(path = '../datasets/', cisi = True):
 
             qs[val].relevant_documents = []
 
-            for doc in rl[key].keys():
+            for doc in rl[key]:
                 qs[val].relevant_documents.append(int(doc))
 
     return [q for q in qs if q.relevant_documents != None]
 
-    
-
-
-    
