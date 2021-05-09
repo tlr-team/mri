@@ -10,7 +10,7 @@ def load_documents(path='../datasets/', dataset='CISI'):
     with open(doc_path, 'r') as docs:
         docs = json.load(docs)
 
-    return [Document(docs[i], cisi=(dataset == 'CISI')) for i in docs]
+    return [Document(docs[i], text=(dataset == 'CISI')) for i in docs]
 
 
 def load_queries(path='../datasets/', dataset='CISI'):
