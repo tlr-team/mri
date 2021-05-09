@@ -84,10 +84,35 @@ class IRM:
                 self.freqij.append([0] * self.N)
                 self.freqij[len(self.index.terms) - 1][self.N - 1] = 1
 
-    def run_query(self, query, top=100):
-        ranking = []
-
+    def run_query(self, query, roccio = False, top = 100):
         q = self.build_query_vector(query)
+        rank = self.get_query_ranking(q)
+
+        if roccio:
+            relevants = [i for (_,i) in rank[0:top]]
+
+            nq = q
+
+            for i in range(self.N):
+                d = self.build_document_vector(i)
+                for j in range(self.index.terms):
+                    factor = 0
+                    if j in relevants:
+                        factor = 0.75 * 1/top * d[j]
+                    else:
+                        factor = -1 * 0.25 * 1/(self.N - top) * d[j]
+                    nq[i] += factor
+        
+            for i in range(len(nq)):
+                if nq[i] < 0:
+                    nq[i] = 0
+            
+            return self.get_query_ranking(nq)[0:top]
+        
+        return rank[0:top]
+
+    def get_query_ranking(self, q):
+        ranking = []
 
         n = len(self.index.terms)
 
@@ -104,7 +129,7 @@ class IRM:
 
         ranking.sort(key=lambda x: -1 * x[1])
 
-        return ranking[0:top]
+        return ranking
 
     def build_query_vector(self, query):
         words = self.text_words(query)

@@ -1,8 +1,8 @@
 class Document:
-    def __init__(self, doc, cisi=True):
+    def __init__(self, doc, text=True):
         self.id = doc['id']
         self.Title = doc.get('title', '')
-        source = 'text' if cisi else 'abstract'
+        source = 'text' if text else 'abstract'
         self.Desc = doc.get(source, '')
         self.author = doc.get('author', '')
 
