@@ -89,7 +89,7 @@ class IRM:
         rank = self.get_query_ranking(q)
 
         if roccio:
-            relevants = [i for (_, i) in rank[0:top]]
+            relevants = [i for (i, _) in rank[0:top]]
 
             nq = q
 
@@ -168,4 +168,10 @@ class IRM:
         ]
 
         return vector
+
+    def get_document_by_id(self, id):
+        for i in self.documents:
+            if i.id == id:
+                return i
+        return Document()
 
