@@ -13,8 +13,8 @@ def F1(RR, RI, NR):
     return 2 / (1 / P + 1 / R)
 
 
-def r_precision(RR, Total):
-    return RR / Total
+def r_precision(RR, RI):
+    return RR / (RR + RI)
 
 
 def fallout(RI, NI):
