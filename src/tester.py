@@ -41,16 +41,16 @@ class Tester:
 
             all = [i for (i,_) in rank]
             rall = [i for (i,_) in rank[0:self.top]]
-            RR = [i for i in all if i in relevants]
-            RI = [i for i in all if i not in relevants]
-            NR = len(relevants) - len(RR)
-            RRR = [i for i in rall if i in relevants]
-            RRI = [i for i in all if i not in relevants]
+            RRR = len([i for i in rall if i in relevants])
+            #RR = len([i for i in all if i in relevants])
+            RI = len([i for i in all if i not in relevants])
+            NR = len(relevants) - RRR
+            RRI = len([i for i in all if i not in relevants])
             RNI = n - len(relevants)
 
-            self.presicion += precision(RR, RI)
-            self.recall += recall(RR, NR)
-            self.f1 += F1(RR, RI, NR)
+            self.presicion += precision(RRR, RI)
+            self.recall += recall(RRR, NR)
+            self.f1 += F1(RRR, RI, NR)
             self.r_presicion += r_precision(RRR, RRI)
             self.fallout += fallout(RRI, RNI)
 
@@ -62,9 +62,18 @@ class Tester:
         self.timing /= len(qs)
 
 
+    def __str__(self) -> str:
+        return f'''
+        Presición: {self.presicion}
+        Recobrado: {self.recall}
+        F1: {self.f1}
+        R-Presición: {self.r_presicion}
+        Fallout: {self.fallout}
+        Tiempo promedio por consulta: {self.timing}
+        '''
 
-
-
+    def __repr__(self) -> str:
+        return self.__str__()
 
         
 
