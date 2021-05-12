@@ -26,7 +26,7 @@ class IRM:
         self.reset()
 
     def reset(self):
-        self.nlp = spacy.load("en_core_web_md")
+        self.nlp = spacy.load("en_core_web_lg")
         self.index = Indexer()
         self.freqij = []
         self.idfi = []
@@ -45,15 +45,17 @@ class IRM:
         return math.log(self.N / self.idfi[term])
 
     def text_words(self, source):
+        pos_tag = ['PROPN', 'ADJ', 'NOUN', 'VERB']
         words = []
 
-        _doc = self.nlp(source)
+        _doc = self.nlp(source.lower())
 
         # get keywords
-        for np in _doc.noun_chunks:
-            for word in np.text.split(' '):
-                if word != None and word != '' and word.lower() not in stop_words:
-                    words.append(word.lower())
+        for token in _doc: #2
+            if(token.text in self.nlp.Defaults.stop_words or token.text in punctuation):
+                continue 
+            if(token.pos_ in pos_tag):
+                words.append(token.text)
 
         return words
 
