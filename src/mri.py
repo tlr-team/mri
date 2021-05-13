@@ -46,15 +46,15 @@ class IRM:
         return math.log(self.N / self.idfi[term])
 
     def text_words(self, source):
-        pos_tag = ['PROPN', 'ADJ', 'NOUN', 'VERB']
+        pos_tag = ['PROPN', 'ADJ', 'NOUN']
         words = []
 
         _doc = self.nlp(source.lower())
 
         # get keywords
-        for token in _doc:  # 2
-            if token.text in self.nlp.Defaults.stop_words or token.text in punctuation:
-                continue
+        for token in _doc: #2
+            if token.text in self.nlp.Defaults.stop_words or token.text in punctuation or token.text in stop_words:
+                continue 
             if token.pos_ in pos_tag:
                 words.append(token.text)
 

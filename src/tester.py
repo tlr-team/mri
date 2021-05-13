@@ -1,11 +1,11 @@
 from .iomethods import load_queries, load_documents
 from .metrics import *
 from time import clock
-from mri import IRM
+from .mri import IRM
 
 class Tester:
 
-    def __init__(self, dataset = 'CRAN', top=10, irm = IRM()):
+    def __init__(self, dataset = 'CRAN', top=100, irm = IRM(), roccio=False):
         self.presicion = 0
         self.recall = 0
         self.f1 = 0
@@ -14,19 +14,35 @@ class Tester:
         self.timing = 0
         self.dataset = dataset
         self.irm = irm
-        self.top = 10
+        self.top = top
+        self.roccio = roccio
+        self.training_time = 0
+        self.qn = 0
+        self.dn = 0
+        self.word_count = 0
 
     def test_dataset(self):
         t = load_documents(dataset=self.dataset)
 
-        qs = load_queries(dataset=self.dataset)
+        self.dn = len(t)
+
+        qs = load_queries(dataset=self.dataset)[0:20]
+
+        self.qn = len(qs)
 
         n = len(t)
 
         self.irm.reset()
+        
+        _start = clock()
 
         for d in t:
             self.irm.add(d)
+        _end = clock()
+
+        self.training_time = _end - _start
+        
+        self.word_count = len(self.irm.index.terms)
 
         for q in qs:
             start = clock()
@@ -64,12 +80,16 @@ class Tester:
 
     def __str__(self) -> str:
         return f'''
-        Presición: {self.presicion}
+        Set de datos: {self.dataset}
+        Cantidad de consultas: {self.qn}
+        Cantidad de documentos: {self.dn}
+        Tiempo de entrenamiento: {self.training_time}
+        Cantidad de términos indexados en el modelo: {self.word_count}
+        Tiempo promedio por consulta: {self.timing}
         Recobrado: {self.recall}
         F1: {self.f1}
         R-Presición: {self.r_presicion}
-        Fallout: {self.fallout}
-        Tiempo promedio por consulta: {self.timing}
+        Fallout: {self.fallout}    
         '''
 
     def __repr__(self) -> str:
