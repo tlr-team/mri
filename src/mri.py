@@ -1,5 +1,6 @@
 import spacy
 import math
+from string import punctuation
 from ..src.stopWords import stop_words
 from ..src.document import Document
 
@@ -51,10 +52,10 @@ class IRM:
         _doc = self.nlp(source.lower())
 
         # get keywords
-        for token in _doc: #2
-            if(token.text in self.nlp.Defaults.stop_words or token.text in punctuation):
-                continue 
-            if(token.pos_ in pos_tag):
+        for token in _doc:  # 2
+            if token.text in self.nlp.Defaults.stop_words or token.text in punctuation:
+                continue
+            if token.pos_ in pos_tag:
                 words.append(token.text)
 
         return words
@@ -63,7 +64,7 @@ class IRM:
         self.documents.append(doc)
         self.N += 1
 
-        text = doc.Title + ' ' + doc.Desc
+        text = doc.title + ' ' + doc.content
 
         words = self.text_words(text)
 
@@ -175,5 +176,5 @@ class IRM:
         for i in self.documents:
             if i.id == id:
                 return i
-        return Document()
+        return Document({})
 
